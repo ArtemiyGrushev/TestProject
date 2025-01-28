@@ -1,24 +1,47 @@
 # Laravel Order Export to XML Project
-Этот проект позволяет экспортировать заказы в XML-файлы с использованием Laravel.
 
--**Установка зависимостей:**
+**Настройка окружения:**
 
-```composer install```
+```bash
+cp .env.sail .env
+```
 
--**Запуск Laravel Sail:**
+**Установка зависимостей:**
 
-```./vendor/bin/sail up -d```
+```bash
+composer install
+```
 
--**Запуск миграций и заполнение БД тестовыми данными:**
+**Запуск Laravel Sail:**
 
-``./vendor/bin/sail artisan migrate --seed``
+```bash
+./vendor/bin/sail up -d
+```
 
--**Запуск обработчик очередей (для обработки задач экспорта):**
+**Запуск миграций и заполнение БД тестовыми данными:**
 
-``./vendor/bin/sail artisan queue:work``
+```bash
+./vendor/bin/sail artisan migrate --seed
+```
 
--**Тесты:**
+**Запуск обработчик очередей (для обработки задач экспорта):**
 
-``./vendor/bin/sail artisan test``
+```bash
+./vendor/bin/sail artisan queue:work
+```
+
+**Тесты:**
+
+```bash
+./vendor/bin/sail artisan test
+```
 
 **Файлы сохраняются в директории */app/private/exports***
+
+## Ссылки:
+
+**PhpMyAdmin**
+
+```bash
+http://localhost:8081
+```
