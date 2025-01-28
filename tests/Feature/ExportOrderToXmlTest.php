@@ -24,7 +24,7 @@ class ExportOrderToXmlTest extends TestCase
     #[Test]
     public function it_creates_xml_file_for_valid_order()
     {
-        // Создаем заказ с нужными данными
+
         $order = Order::factory()->create([
             'order_number' => 'ORDER123',
             'total_price' => 100.50,
