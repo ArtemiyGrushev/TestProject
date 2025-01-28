@@ -27,7 +27,6 @@ composer install
 **Запуск сидеров для заполнения бд:**
 
 ```bash
-./vendor/bin/sail artisan db:seed --class=DatabaseSeeder
 ./vendor/bin/sail artisan db:seed --class=OrderSeeder
 ```
 
