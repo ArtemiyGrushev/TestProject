@@ -25,7 +25,7 @@ class FileController extends Controller
             return $file->getFilename();
         }, $xmlFiles);
 
-        sort($xmlFileNames);
+
 
         return view('files.index', ['files' => $xmlFileNames]);
     }

@@ -5,23 +5,26 @@ namespace Tests\Feature;
 use App\Jobs\ExportOrderToXml;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ExportOrderToXmlTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Используем фейковое хранилище для тестов
         Storage::fake('local');
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_xml_file_for_valid_order()
     {
-        // Создаем тестовый заказ с товарами
+        // Создаем заказ с нужными данными
         $order = Order::factory()->create([
             'order_number' => 'ORDER123',
             'total_price' => 100.50,
@@ -34,33 +37,32 @@ class ExportOrderToXmlTest extends TestCase
             'quantity' => 2,
         ]);
 
-        // Выполняем задачу
         $job = new ExportOrderToXml($order->id);
         $job->handle();
 
-        // Проверяем, что файл был создан
         Storage::disk('local')->assertExists('exports/order_' . $order->id . '.xml');
 
-        // Проверяем содержимое файла
         $xmlContent = Storage::disk('local')->get('exports/order_' . $order->id . '.xml');
-        $this->assertStringContainsString('<order_number>ORDER123</order_number>', $xmlContent);
-        $this->assertStringContainsString('<total_price>100.50</total_price>', $xmlContent);
-        $this->assertStringContainsString('<name>Test Product</name>', $xmlContent);
-        $this->assertStringContainsString('<price>50.25</price>', $xmlContent);
-        $this->assertStringContainsString('<quantity>2</quantity>', $xmlContent);
+
+        $xml = simplexml_load_string($xmlContent);
+
+        $this->assertEquals('ORDER123', (string)$xml->order_number);
+        $this->assertEquals(number_format(100.50, 2), number_format((float)$xml->total_price, 2));
+
+        $this->assertCount(1, $xml->products->product);
+        $this->assertEquals('Test Product', (string)$xml->products->product->name);
+        $this->assertEquals(number_format(50.25, 2), number_format((float)$xml->products->product->price, 2));
+        $this->assertEquals('2', (string)$xml->products->product->quantity);
     }
 
-    /** @test */
+    #[Test]
     public function it_does_not_create_xml_file_for_invalid_order()
     {
-        // Несуществующий ID заказа
         $invalidOrderId = 9999;
 
-        // Выполняем задачу
         $job = new ExportOrderToXml($invalidOrderId);
         $job->handle();
 
-        // Проверяем, что файл не был создан
         Storage::disk('local')->assertMissing('exports/order_' . $invalidOrderId . '.xml');
     }
 }

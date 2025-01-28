@@ -18,10 +18,17 @@ composer install
 ./vendor/bin/sail up -d
 ```
 
-**Запуск миграций и заполнение БД тестовыми данными:**
+**Запуск миграций:**
 
 ```bash
-./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan migrate
+```
+
+**Запуск сидеров для заполнения бд:**
+
+```bash
+./vendor/bin/sail artisan db:seed --class=DatabaseSeeder
+./vendor/bin/sail artisan db:seed --class=OrderSeeder
 ```
 
 **Запуск обработчик очередей (для обработки задач экспорта):**
@@ -38,7 +45,11 @@ composer install
 
 **Файлы сохраняются в директории */app/private/exports***
 
-## Ссылки:
+## Использование:
+
+**Заходим на *http://localhost* и Нажимаем на кнопку экспорт файлов, затем переходим *http://localhost/files***
+
+### Ссылки:
 
 **PhpMyAdmin**
 
