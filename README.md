@@ -24,7 +24,7 @@ composer install
 ./vendor/bin/sail artisan migrate
 ```
 
-**Запуск сидеров для заполнения бд:**
+**Запуск сидера для заполнения бд:**
 
 ```bash
 ./vendor/bin/sail artisan db:seed --class=OrderSeeder
